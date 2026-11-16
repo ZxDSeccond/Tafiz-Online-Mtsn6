@@ -26,7 +26,7 @@ jobs:
           cache: true
 
       - name: Generate Android Platform Files
-        run: flutter create --platforms=android .
+        run: flutter create --platforms=android --project-name=tahfiz_zxd .
 
       - name: Add Internet Permission to Manifest
         run: |
