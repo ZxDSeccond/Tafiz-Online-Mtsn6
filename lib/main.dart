@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = [
+    final List<Map<String, dynamic>> data = [
       {
         'tanggal': '2026-11-16T08:30:00',
         'surah': 'Al-Mulk',
@@ -42,8 +42,13 @@ class MyApp extends StatelessWidget {
           itemCount: data.length,
           itemBuilder: (context, index) {
             final r = data[index];
+            final tanggal = r['tanggal'] as String;
+            final bintang = (r['bintang'] as num?)?.toInt() ?? 0;
+            final jenis = r['jenis'] as String;
+            final isZiyadah = jenis == 'Ziyadah';
+
             final tgl = DateFormat('dd MMM yyyy, HH:mm')
-                .format(DateTime.parse(r['tanggal']).toLocal());
+                .format(DateTime.parse(tanggal).toLocal());
 
             return Card(
               margin: const EdgeInsets.only(bottom: 12),
@@ -68,17 +73,17 @@ class MyApp extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: r['jenis'] == 'Ziyadah'
+                            color: isZiyadah
                                 ? const Color(0xFFECFDF5)
                                 : Colors.blue.shade50,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            '${r['jenis']}',
+                            jenis,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: r['jenis'] == 'Ziyadah'
+                              color: isZiyadah
                                   ? const Color(0xFF065F46)
                                   : Colors.blue.shade800,
                             ),
@@ -91,7 +96,7 @@ class MyApp extends StatelessWidget {
                       children: List.generate(
                         5,
                         (idx) => Icon(
-                          idx < (r['bintang'] ?? 0)
+                          idx < bintang
                               ? Icons.star_rounded
                               : Icons.star_outline_rounded,
                           color: Colors.amber,
@@ -99,7 +104,8 @@ class MyApp extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (r['catatan'] != null && r['catatan'].toString().isNotEmpty) ...[
+                    if (r['catatan'] != null &&
+                        r['catatan'].toString().isNotEmpty) ...[
                       const SizedBox(height: 6),
                       Text(
                         'Catatan: ${r['catatan']}',
